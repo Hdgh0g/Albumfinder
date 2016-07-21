@@ -1,0 +1,20 @@
+group 'hdgh0g.albumfinder'
+version '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = "hdgh0g.albumfinder.Application"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://dl.bintray.com/ijabz/maven"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'net.jthink', name: 'jaudiotagger', version: '2.2.5'
+}
