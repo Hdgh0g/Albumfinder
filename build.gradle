@@ -16,5 +16,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile group: 'net.jthink', name: 'jaudiotagger', version: '2.2.5'
 }

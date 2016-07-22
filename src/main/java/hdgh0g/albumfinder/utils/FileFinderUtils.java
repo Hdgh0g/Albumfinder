@@ -4,15 +4,20 @@ import org.jaudiotagger.audio.AudioFileFilter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileFinderUtils {
 
     private static AudioFileFilter audioFileFilter = new AudioFileFilter(false);
+
+    public static Set<File> findMusicFilesInFolders(Boolean recursively, File ... folders) throws IOException {
+        List<String> args = new ArrayList<>();
+        for (File folder : folders) {
+            args.add(folder.getCanonicalPath());
+        }
+        return findMusicFilesInFolders(recursively, args.toArray(new String[args.size()]));
+    }
 
     public static Set<File> findMusicFilesInFolders(Boolean recursively, String ... folders) throws IOException {
         Set<File> foundFiles = new HashSet<>();
@@ -39,7 +44,7 @@ public class FileFinderUtils {
         }
 
         if (!recursively) {
-            return Arrays.stream(directoryFiles).filter(file -> !file.isDirectory()).filter(file -> isMusicFile(file)).collect(Collectors.toList());
+            return Arrays.stream(directoryFiles).filter(file -> !file.isDirectory()).filter(FileFinderUtils::isMusicFile).collect(Collectors.toList());
         } else {
             Set<File> foundFiles = new HashSet<>();
             for (File file : directoryFiles) {
