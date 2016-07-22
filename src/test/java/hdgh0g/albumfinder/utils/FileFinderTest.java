@@ -11,12 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.is;
+import static hdgh0g.albumfinder.TestUtils.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 public class FileFinderTest {
-
-    private final static String TEST_FOLDER_NAME = "albumfinder_tests";
-    private final static String TEST_SUBFOLDER_NAME = "subfolder";
 
     @AfterClass
     public static void cleanUp() throws IOException {
@@ -26,7 +25,7 @@ public class FileFinderTest {
     @BeforeClass
     public static void createFileStructure() throws IOException {
         File testFolder = testFolder();
-        File testSubfolder = new File(testFolder, TEST_SUBFOLDER_NAME);
+        File testSubfolder = testSubfolder();
 
         InputStream resourceInputStream = FileFinderTest.class.getClassLoader().getResourceAsStream("testfiles/test_flac.flac");
         FileUtils.copyInputStreamToFile(resourceInputStream, new File(testFolder,"test_flac.flac"));
@@ -41,7 +40,7 @@ public class FileFinderTest {
     @Test
     public void testRecursivelyFileSearch() throws IOException {
         Set<File> files = FileFinderUtils.findMusicFilesInFolders(true, testFolder());
-        MatcherAssert.assertThat("found all", files.size(), is(2));
+        MatcherAssert.assertThat("found all", files, hasSize(2));
     }
 
     @Test
@@ -52,17 +51,13 @@ public class FileFinderTest {
 
     @Test
     public void testFileSearchFromTwoFolders() throws IOException {
-        Set<File> files = FileFinderUtils.findMusicFilesInFolders(false, testFolder(), new File(testFolder(), TEST_SUBFOLDER_NAME));
-        MatcherAssert.assertThat("found from all", files.size(), is(2));
+        Set<File> files = FileFinderUtils.findMusicFilesInFolders(false, testFolder(), testSubfolder());
+        MatcherAssert.assertThat("found from all", files, hasSize(2));
     }
 
     @Test
     public void testFileSearchFromSameFolders() throws IOException {
         Set<File> files = FileFinderUtils.findMusicFilesInFolders(false, testFolder(), testFolder());
-        MatcherAssert.assertThat("found only once", files.size(), is(1));
-    }
-
-    private static File testFolder() {
-        return new File(FileUtils.getTempDirectory(), TEST_FOLDER_NAME);
+        MatcherAssert.assertThat("found only once", files, hasSize(1));
     }
 }
