@@ -41,7 +41,7 @@ public class WhatCdSearchPanel extends JPanel {
 
     private void updateAlbumJList() {
         DefaultListModel listModel = new DefaultListModel();
-        albums.forEach(artist -> listModel.addElement(artist));
+        albums.stream().sorted((o1, o2) -> o2.getYear().compareTo(o1.getYear())).forEach(artist -> listModel.addElement(artist));
         albumJList.setModel(listModel);
     }
 
