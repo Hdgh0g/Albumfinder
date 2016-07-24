@@ -11,6 +11,13 @@ public class FileFinderUtils {
 
     private static AudioFileFilter audioFileFilter = new AudioFileFilter(false);
 
+    public static Set<File> findMusicFilesInFolders(boolean recursively, Collection<File> folders) throws IOException {
+        if (folders != null) {
+            return findMusicFilesInFolders(recursively, folders.toArray(new File[folders.size()]));
+        }
+        return new HashSet<>();
+    }
+
     public static Set<File> findMusicFilesInFolders(Boolean recursively, File ... folders) throws IOException {
         List<String> args = new ArrayList<>();
         for (File folder : folders) {
