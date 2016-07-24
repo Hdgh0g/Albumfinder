@@ -1,7 +1,6 @@
 package hdgh0g.albumfinder.gui.artistlist;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.util.Collections;
@@ -44,7 +43,7 @@ public class FolderFinderPanel extends JPanel {
 
     private void bindButtons() {
         openJFileChooser.addActionListener(e -> {
-            chooser.showOpenDialog(null);
+            chooser.showOpenDialog(this);
             File[] chosenFolders = chooser.getSelectedFiles();
             Collections.addAll(folders, chosenFolders);
             reloadFoldersList();
@@ -61,20 +60,14 @@ public class FolderFinderPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel panelForButtons = new JPanel();
-        panelForButtons.setLayout(new BoxLayout(panelForButtons, BoxLayout.Y_AXIS));
-        panelForButtons.add(Box.createVerticalGlue());
         panelForButtons.add(openJFileChooser);
-        panelForButtons.add(Box.createVerticalStrut(3));
         panelForButtons.add(deleteFolderFromList);
-        panelForButtons.add(Box.createVerticalGlue());
-        panelForButtons.setBorder(new EmptyBorder(3,3,3,3));
-        add(panelForButtons, BorderLayout.EAST);
+        add(panelForButtons, BorderLayout.NORTH);
 
         JPanel panelForList = new JPanel();
         panelForList.setLayout(new BoxLayout(panelForList, BoxLayout.Y_AXIS));
         panelForList.add(folderLabel);
         panelForList.add(new JScrollPane(folderList));
-        panelForList.setBorder(new EmptyBorder(3,3,3,3));
         folderList.setVisibleRowCount(VISIBLE_ROW_COUNT);
         add(panelForList);
     }

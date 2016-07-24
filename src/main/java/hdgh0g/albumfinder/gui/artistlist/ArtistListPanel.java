@@ -7,7 +7,6 @@ import hdgh0g.albumfinder.utils.TagExtractUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +24,11 @@ public class ArtistListPanel extends JPanel {
 
     private JLabel artistLabel = new JLabel("Выбранные артисты");
 
-    private JButton scanFolders = new JButton("Просканировать папки");
+    private JButton scanFolders = new JButton("Сканировать папки");
 
-    private JButton addArtist = new JButton("Добавить артиста вручную");
+    private JButton addArtist = new JButton("Добавить вручную");
+
+    private JButton deleteArtistFromList = new JButton("Удалить из списка");
 
     private Set<Artist> artists = new HashSet<>();
 
@@ -42,7 +43,7 @@ public class ArtistListPanel extends JPanel {
 
     private void bindButtons() {
         addArtist.addActionListener(e -> {
-            String artistName = JOptionPane.showInputDialog(null, "Введите имя артиста", "Добавление нового артиста",  JOptionPane.QUESTION_MESSAGE);
+            String artistName = JOptionPane.showInputDialog(this, "Введите имя артиста", "Добавление нового артиста",  JOptionPane.QUESTION_MESSAGE);
             if (!StringUtils.isBlank(artistName)) {
                 artists.add(new Artist(artistName));
             }
@@ -59,6 +60,12 @@ public class ArtistListPanel extends JPanel {
             }
             reloadArtistList();
         });
+
+        deleteArtistFromList.addActionListener(e -> {
+            Artist selectedArtist = (Artist) artistList.getSelectedValue();
+            artists.remove(selectedArtist);
+            reloadArtistList();
+        });
     }
 
     private void addPanels() {
@@ -67,6 +74,7 @@ public class ArtistListPanel extends JPanel {
         JPanel topPanel = new JPanel();
         topPanel.add(scanFolders);
         topPanel.add(addArtist);
+        topPanel.add(deleteArtistFromList);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel artistPanel = new JPanel();
@@ -74,7 +82,6 @@ public class ArtistListPanel extends JPanel {
         artistPanel.add(artistLabel);
         artistPanel.add(new JScrollPane(artistList));
         artistList.setVisibleRowCount(VISIBLE_ROW_COUNT);
-        artistPanel.setBorder(new EmptyBorder(3,3,3,3));
         add(artistPanel);
     }
 

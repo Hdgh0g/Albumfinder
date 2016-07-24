@@ -26,6 +26,7 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile group: 'oauth.signpost', name: 'signpost-core', version: '1.2.1.2'
+    compile group: 'com.seaglasslookandfeel', name: 'seaglasslookandfeel', version: '0.1.6.1'
 
     def version = '1.9.1';
     def name = 'WhatAPI';
