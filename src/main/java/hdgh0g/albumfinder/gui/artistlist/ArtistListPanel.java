@@ -2,6 +2,7 @@ package hdgh0g.albumfinder.gui.artistlist;
 
 import hdgh0g.albumfinder.domain.Album;
 import hdgh0g.albumfinder.domain.Artist;
+import hdgh0g.albumfinder.gui.whatcd.WhatCdSearchPanel;
 import hdgh0g.albumfinder.utils.FileFinderUtils;
 import hdgh0g.albumfinder.utils.TagExtractUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,37 +21,40 @@ public class ArtistListPanel extends JPanel {
 
     private FolderFinderPanel folderFinderPanel;
 
-    private JList artistList = new JList<>();
+    private WhatCdSearchPanel searchPanel;
 
-    private JLabel artistLabel = new JLabel("Выбранные артисты");
+    private JList artistJList = new JList<>();
 
-    private JButton scanFolders = new JButton("Сканировать папки");
+    private JLabel artistJLabel = new JLabel("Выбранные артисты");
 
-    private JButton addArtist = new JButton("Добавить вручную");
+    private JButton scanFoldersButton = new JButton("Сканировать папки");
 
-    private JButton deleteArtistFromList = new JButton("Удалить из списка");
+    private JButton addArtistButton = new JButton("Добавить вручную");
+
+    private JButton deleteArtistFromListButton = new JButton("Удалить из списка");
 
     private Set<Artist> artists = new HashSet<>();
 
-    public ArtistListPanel(FolderFinderPanel folderFinderPanel) {
+    public ArtistListPanel(FolderFinderPanel folderFinderPanel, WhatCdSearchPanel searchPanel) {
         super();
         this.folderFinderPanel = folderFinderPanel;
-        scanFolders.setEnabled(false);
+        this.searchPanel = searchPanel;
+        scanFoldersButton.setEnabled(false);
 
         addPanels();
         bindButtons();
     }
 
     private void bindButtons() {
-        addArtist.addActionListener(e -> {
+        addArtistButton.addActionListener(e -> {
             String artistName = JOptionPane.showInputDialog(this, "Введите имя артиста", "Добавление нового артиста",  JOptionPane.QUESTION_MESSAGE);
             if (!StringUtils.isBlank(artistName)) {
                 artists.add(new Artist(artistName));
             }
-            reloadArtistList();
+            updateArtistJList();
         });
 
-        scanFolders.addActionListener(e -> {
+        scanFoldersButton.addActionListener(e -> {
             try {
                 Set<File> files = FileFinderUtils.findMusicFilesInFolders(false, folderFinderPanel.getFolders());
                 Set<Album> albums = TagExtractUtils.getAllAlbumFromFiles(files.toArray(new File[files.size()]));
@@ -58,13 +62,13 @@ public class ArtistListPanel extends JPanel {
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(null, "Ошибка в чтении какого-то файла или папки", "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
-            reloadArtistList();
+            updateArtistJList();
         });
 
-        deleteArtistFromList.addActionListener(e -> {
-            Artist selectedArtist = (Artist) artistList.getSelectedValue();
+        deleteArtistFromListButton.addActionListener(e -> {
+            Artist selectedArtist = (Artist) artistJList.getSelectedValue();
             artists.remove(selectedArtist);
-            reloadArtistList();
+            updateArtistJList();
         });
     }
 
@@ -72,23 +76,24 @@ public class ArtistListPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        topPanel.add(scanFolders);
-        topPanel.add(addArtist);
-        topPanel.add(deleteArtistFromList);
+        topPanel.add(scanFoldersButton);
+        topPanel.add(addArtistButton);
+        topPanel.add(deleteArtistFromListButton);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel artistPanel = new JPanel();
         artistPanel.setLayout(new BoxLayout(artistPanel, BoxLayout.Y_AXIS));
-        artistPanel.add(artistLabel);
-        artistPanel.add(new JScrollPane(artistList));
-        artistList.setVisibleRowCount(VISIBLE_ROW_COUNT);
+        artistPanel.add(artistJLabel);
+        artistPanel.add(new JScrollPane(artistJList));
+        artistJList.setVisibleRowCount(VISIBLE_ROW_COUNT);
         add(artistPanel);
     }
 
-    private void reloadArtistList() {
+    private void updateArtistJList() {
         DefaultListModel listModel = new DefaultListModel();
         artists.forEach(artist -> listModel.addElement(artist));
-        artistList.setModel(listModel);
+        artistJList.setModel(listModel);
+        searchPanel.updateArtists(artists);
     }
 
     public Set<Artist> getArtists() {
@@ -96,6 +101,6 @@ public class ArtistListPanel extends JPanel {
     }
 
     public void setButtonEnabled(boolean state) {
-        scanFolders.setEnabled(state);
+        scanFoldersButton.setEnabled(state);
     }
 }

@@ -31,9 +31,12 @@ public class MainFrame extends JFrame {
         setResizable(false);
         setLayout(new GridLayout(1,2));
 
-        ArtistPanel artistPanel = new ArtistPanel();
+
+        WhatCdPanel whatCdPanel = new WhatCdPanel();
+        ArtistPanel artistPanel = new ArtistPanel(whatCdPanel);
         artistPanel.setBorder(new EmptyBorder(3,3,3,3));
+        whatCdPanel.setBorder(new EmptyBorder(3,3,3,3));
         add(artistPanel);
-        add(new WhatCdPanel(artistPanel));
+        add(whatCdPanel);
     }
 }

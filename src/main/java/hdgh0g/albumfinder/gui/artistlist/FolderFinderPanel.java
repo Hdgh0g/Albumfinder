@@ -13,11 +13,11 @@ public class FolderFinderPanel extends JPanel {
 
     private JFileChooser chooser;
 
-    private JButton openJFileChooser = new JButton("Добавить папки");
+    private JButton openJFileChooserButton = new JButton("Добавить папки");
 
-    private JButton deleteFolderFromList = new JButton("Удалить папку из списка");
+    private JButton deleteFolderFromListButton = new JButton("Удалить папку из списка");
 
-    private JList folderList = new JList();
+    private JList folderJList = new JList();
 
     private JLabel folderLabel = new JLabel("Выбранные папки");
 
@@ -42,17 +42,17 @@ public class FolderFinderPanel extends JPanel {
     }
 
     private void bindButtons() {
-        openJFileChooser.addActionListener(e -> {
+        openJFileChooserButton.addActionListener(e -> {
             chooser.showOpenDialog(this);
             File[] chosenFolders = chooser.getSelectedFiles();
             Collections.addAll(folders, chosenFolders);
-            reloadFoldersList();
+            updateFolderJList();
         });
 
-        deleteFolderFromList.addActionListener(e -> {
-            File selectedFile = (File) folderList.getSelectedValue();
+        deleteFolderFromListButton.addActionListener(e -> {
+            File selectedFile = (File) folderJList.getSelectedValue();
             folders.remove(selectedFile);
-            reloadFoldersList();
+            updateFolderJList();
         });
     }
 
@@ -60,23 +60,23 @@ public class FolderFinderPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel panelForButtons = new JPanel();
-        panelForButtons.add(openJFileChooser);
-        panelForButtons.add(deleteFolderFromList);
+        panelForButtons.add(openJFileChooserButton);
+        panelForButtons.add(deleteFolderFromListButton);
         add(panelForButtons, BorderLayout.NORTH);
 
         JPanel panelForList = new JPanel();
         panelForList.setLayout(new BoxLayout(panelForList, BoxLayout.Y_AXIS));
         panelForList.add(folderLabel);
-        panelForList.add(new JScrollPane(folderList));
-        folderList.setVisibleRowCount(VISIBLE_ROW_COUNT);
+        panelForList.add(new JScrollPane(folderJList));
+        folderJList.setVisibleRowCount(VISIBLE_ROW_COUNT);
         add(panelForList);
     }
 
-    private void reloadFoldersList() {
+    private void updateFolderJList() {
         artistListPanel.setButtonEnabled(folders.size() > 0);
         DefaultListModel listModel = new DefaultListModel();
         folders.forEach(folder -> listModel.addElement(folder));
-        folderList.setModel(listModel);
+        folderJList.setModel(listModel);
     }
 
     public Set<File> getFolders() {

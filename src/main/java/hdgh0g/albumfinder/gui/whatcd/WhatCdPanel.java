@@ -1,17 +1,24 @@
 package hdgh0g.albumfinder.gui.whatcd;
 
-import hdgh0g.albumfinder.gui.artistlist.ArtistPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class WhatCdPanel extends JPanel {
 
-    private ArtistPanel artistPanel;
+    private WhatCdLoginPanel loginPanel;
 
-    public WhatCdPanel(ArtistPanel artistPanel) {
+    private WhatCdSearchPanel searchPanel;
+
+    public WhatCdPanel() {
         super();
-        this.artistPanel = artistPanel;
         setLayout(new BorderLayout());
+        searchPanel = new WhatCdSearchPanel();
+        loginPanel = new WhatCdLoginPanel(searchPanel);
+        add(loginPanel, BorderLayout.NORTH);
+        add(searchPanel);
+    }
+
+    public WhatCdSearchPanel getSearchPanel() {
+        return searchPanel;
     }
 }
