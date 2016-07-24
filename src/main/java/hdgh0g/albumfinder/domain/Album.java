@@ -45,11 +45,11 @@ public class Album {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return (albumArtist + name).hashCode();
     }
 
     @Override
     public String toString() {
-        return albumArtist + " " + name;
+        return albumArtist + " - " + name + (year != null ? (" - " + year) : "");
     }
 }

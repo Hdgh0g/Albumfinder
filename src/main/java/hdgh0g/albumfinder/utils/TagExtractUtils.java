@@ -30,9 +30,15 @@ public class TagExtractUtils {
             return null;
         }
         Tag tag = audioFile.getTag();
-        String artist = tag.getFirst(FieldKey.ARTIST);
+        String artist = tag.getFirst(FieldKey.ALBUM_ARTIST);
+        if (artist == null) {
+            tag.getFirst(FieldKey.ARTIST);
+        }
         String album = tag.getFirst(FieldKey.ALBUM);
-        Integer year = Integer.valueOf(tag.getFirst(FieldKey.YEAR));
+        Integer year = null;
+        try {
+            year = Integer.valueOf(tag.getFirst(FieldKey.YEAR));
+        } catch (Exception ignored) {}
         if (artist != null && album != null) {
             if (year != null) {
                 return new Album(new Artist(artist), album, year);

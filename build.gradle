@@ -26,5 +26,12 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile group: 'oauth.signpost', name: 'signpost-core', version: '1.2.1.2'
-//    compile 'com.github.Gwindow.WhatAPI:master-SNAPSHOT'
+
+    def version = '1.9.1';
+    def name = 'WhatAPI';
+    def f = new File(new File(projectDir, 'libs'), name + version + '.jar');
+    if (!f.exists()) {
+        new URL('https://github.com/Gwindow/WhatAPI/releases/download/1.9.1/' + name + '.jar').withInputStream{ i -> f.withOutputStream{ it << i }}
+    }
+    compile files(f.getPath())
 }
