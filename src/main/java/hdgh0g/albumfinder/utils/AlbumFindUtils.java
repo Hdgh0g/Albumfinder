@@ -42,7 +42,7 @@ public class AlbumFindUtils {
             return new HashSet<>();
         }
         Set<TorrentGroup> torrentGroups = whatCdArtist.getReleases().getReleases().get(ReleaseType.ALBUM);
-        return torrentGroups.stream()
+        return torrentGroups == null ? new HashSet<>() : torrentGroups.stream()
                 .map(torrentGroup -> new Album(new Artist(artist), torrentGroup.getGroupName(), torrentGroup.getGroupYear().intValue()))
                 .collect(Collectors.toSet());
     }

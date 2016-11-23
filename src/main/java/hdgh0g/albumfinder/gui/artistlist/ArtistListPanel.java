@@ -56,7 +56,7 @@ public class ArtistListPanel extends JPanel {
 
         scanFoldersButton.addActionListener(e -> {
             try {
-                Set<File> files = FileFinderUtils.findMusicFilesInFolders(false, folderFinderPanel.getFolders());
+                Set<File> files = FileFinderUtils.findMusicFilesInFolders(true, folderFinderPanel.getFolders());
                 Set<Album> albums = TagExtractUtils.getAllAlbumFromFiles(files.toArray(new File[files.size()]));
                 artists.addAll(albums.stream().map(Album::getAlbumArtist).collect(Collectors.toSet()));
             } catch (IOException e1) {
