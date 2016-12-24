@@ -1,7 +1,7 @@
 package hdgh0g.albumfinder.gui;
 
 import hdgh0g.albumfinder.gui.artistlist.ArtistPanel;
-import hdgh0g.albumfinder.gui.whatcd.WhatCdPanel;
+import hdgh0g.albumfinder.gui.whatcd.AlbumsSearchPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,16 +14,6 @@ public class MainFrame extends JFrame {
     private final static String name = "Album Finder";
 
     public MainFrame() {
-
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception e) { }
-
         setSize(WIDTH, HEIGHT);
         setTitle(name);
         setVisible(true);
@@ -32,11 +22,11 @@ public class MainFrame extends JFrame {
         setLayout(new GridLayout(1,2));
 
 
-        WhatCdPanel whatCdPanel = new WhatCdPanel();
-        ArtistPanel artistPanel = new ArtistPanel(whatCdPanel);
+        AlbumsSearchPanel albumsPanel = new AlbumsSearchPanel();
+        ArtistPanel artistPanel = new ArtistPanel(albumsPanel);
         artistPanel.setBorder(new EmptyBorder(3,3,3,3));
-        whatCdPanel.setBorder(new EmptyBorder(3,3,3,3));
+        albumsPanel.setBorder(new EmptyBorder(3,3,3,3));
         add(artistPanel);
-        add(whatCdPanel);
+        add(albumsPanel);
     }
 }

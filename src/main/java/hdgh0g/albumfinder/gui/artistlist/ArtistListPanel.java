@@ -2,7 +2,7 @@ package hdgh0g.albumfinder.gui.artistlist;
 
 import hdgh0g.albumfinder.domain.Album;
 import hdgh0g.albumfinder.domain.Artist;
-import hdgh0g.albumfinder.gui.whatcd.WhatCdSearchPanel;
+import hdgh0g.albumfinder.gui.whatcd.AlbumsSearchPanel;
 import hdgh0g.albumfinder.utils.FileFinderUtils;
 import hdgh0g.albumfinder.utils.TagExtractUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +21,9 @@ public class ArtistListPanel extends JPanel {
 
     private FolderFinderPanel folderFinderPanel;
 
-    private WhatCdSearchPanel searchPanel;
+    private AlbumsSearchPanel searchPanel;
 
-    private JList artistJList = new JList<>();
+    private JList<Artist> artistJList = new JList<>();
 
     private JLabel artistJLabel = new JLabel("Выбранные артисты");
 
@@ -35,7 +35,7 @@ public class ArtistListPanel extends JPanel {
 
     private Set<Artist> artists = new HashSet<>();
 
-    public ArtistListPanel(FolderFinderPanel folderFinderPanel, WhatCdSearchPanel searchPanel) {
+    public ArtistListPanel(FolderFinderPanel folderFinderPanel, AlbumsSearchPanel searchPanel) {
         super();
         this.folderFinderPanel = folderFinderPanel;
         this.searchPanel = searchPanel;
@@ -66,7 +66,7 @@ public class ArtistListPanel extends JPanel {
         });
 
         deleteArtistFromListButton.addActionListener(e -> {
-            Artist selectedArtist = (Artist) artistJList.getSelectedValue();
+            Artist selectedArtist = artistJList.getSelectedValue();
             artists.remove(selectedArtist);
             updateArtistJList();
         });
@@ -90,8 +90,8 @@ public class ArtistListPanel extends JPanel {
     }
 
     private void updateArtistJList() {
-        DefaultListModel listModel = new DefaultListModel();
-        artists.forEach(artist -> listModel.addElement(artist));
+        DefaultListModel<Artist> listModel = new DefaultListModel<>();
+        artists.forEach(listModel::addElement);
         artistJList.setModel(listModel);
         searchPanel.updateArtists(artists);
     }

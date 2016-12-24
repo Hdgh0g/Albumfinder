@@ -8,22 +8,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class WhatCdSearchPanel extends JPanel {
+public class AlbumsSearchPanel extends JPanel {
 
     private Set<Artist> artists = new HashSet<>();
-
-    private boolean connected = false;
 
     private JButton searchButton = new JButton("Искать новые альбомы");
 
     private JLabel albumsLabel = new JLabel("Найденные альбомы");
 
-    private JList albumJList = new JList();
+    private JList<Album> albumJList = new JList<>();
+
+    private JProgressBar jProgressBar = new JProgressBar();
 
     private Set<Album> albums;
 
-    public WhatCdSearchPanel() {
+    public AlbumsSearchPanel() {
         super();
         searchButton.setEnabled(false);
         albumJList.setEnabled(false);
@@ -34,14 +36,28 @@ public class WhatCdSearchPanel extends JPanel {
 
     private void bindButtons() {
         searchButton.addActionListener(e -> {
-            albums = AlbumFindUtils.findAllAlbums(artists);
-            updateAlbumJList();
+            ExecutorService service = Executors.newSingleThreadExecutor();
+            service.submit( () -> {
+                searchButton.setEnabled(false);
+                jProgressBar.setMinimum(0);
+                jProgressBar.setMaximum(artists.size());
+                jProgressBar.setStringPainted(true);
+                albums = AlbumFindUtils.findAllAlbums(artists, (i) -> {
+                    jProgressBar.setValue(i + 1);
+                    this.repaint();
+                    int value = jProgressBar.getValue();
+                    System.out.println(value);
+                });
+                updateAlbumJList();
+                searchButton.setEnabled(true);
+            });
+            service.shutdown();
         });
     }
 
     private void updateAlbumJList() {
-        DefaultListModel listModel = new DefaultListModel();
-        albums.stream().sorted((o1, o2) -> o2.getYear().compareTo(o1.getYear())).forEach(artist -> listModel.addElement(artist));
+        DefaultListModel<Album> listModel = new DefaultListModel<>();
+        albums.stream().sorted((o1, o2) -> o2.getYear().compareTo(o1.getYear())).forEach(listModel::addElement);
         albumJList.setModel(listModel);
     }
 
@@ -49,7 +65,10 @@ public class WhatCdSearchPanel extends JPanel {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        searchButton.setAlignmentX(CENTER_ALIGNMENT);
         topPanel.add(searchButton);
+        topPanel.add(jProgressBar);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel artistPanel = new JPanel();
@@ -61,20 +80,11 @@ public class WhatCdSearchPanel extends JPanel {
 
     public void updateArtists(Set<Artist> artists) {
         this.artists = artists;
-        updateSearchButton();
-    }
-
-    public void updateConnected(boolean connected) {
-        this.connected = connected;
-        updateSearchButton();
-    }
-
-    private void updateSearchButton() {
-        boolean enabled = connected && artists.size() > 0;
+        boolean enabled = artists.size() > 0;
         searchButton.setEnabled(enabled);
         albumJList.setEnabled(enabled);
         if (!enabled) {
-            albumJList.setModel(new DefaultListModel());
+            albumJList.setModel(new DefaultListModel<>());
         }
     }
 }
